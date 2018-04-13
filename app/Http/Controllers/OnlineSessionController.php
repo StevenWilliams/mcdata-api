@@ -105,6 +105,7 @@ class OnlineSessionController extends Controller
             echo "useronlineinPastTimeID";
             $pastSession = OnlineSession::where("username", "=", $username)->where("timeID", "=", $pastTimeID);
             $pastSessionLength = $pastSession->sessionLength;
+            echo "pastSessionLength", $pastSessionLength, " ", "sessionlength", " ", $sessionLength;
             $record->sessionLength = $pastSessionLength + $sessionLength;
             $record->save();
             $pastSession->delete();
