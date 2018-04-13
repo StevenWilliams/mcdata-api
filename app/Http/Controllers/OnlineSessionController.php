@@ -140,7 +140,7 @@ class OnlineSessionController extends Controller
                 $pastTime = $pastSession["time"];
             }
 
-            $thisSessionTime = $timeBetweenLast; //make sure the difference between the pastTimeID is more than 15 min,
+            $thisSessionTime = $timeBetweenLast::format("%i"); //make sure the difference between the pastTimeID is more than 15 min,
             // to avoid it going in a loop adding more time than there was. Also if there's more submissions than there's supposed to be. 15 min will be the max. On server startup it will keep track of the time.
             //submit at x:00, x:15, x:30, x:45 - to make it even.
             $record = new OnlineSession;
@@ -148,7 +148,7 @@ class OnlineSessionController extends Controller
             //$record->uuid = $player["uuid"];
             $record->recordID = 0; //auto increment
             //$record->recordTime = time();
-            $record->sessionLength = $pastTime + $thisSessionTime;
+            $record->sessionLength = $thisSessionTime;
             $record->timeID = $timeID;
             $record->save();
 
