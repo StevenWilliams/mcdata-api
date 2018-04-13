@@ -102,15 +102,17 @@ class OnlineSessionController extends Controller
         //var_dump($data);
         $players = $data["players"];
         $server = $data["server"];
+        $timeBetweenLimit = $data["timeBetweenLimit"];
+        $gracePeriodSeconds = $data["gradePeriod"];
         $requestInterval = 15;
         //var_dump($players);
         $timeLast = TimeRecordController::getLastTimeID($server);
         $lastTimeRecord = TimeRecord::where("server", "=", $server)->where("timeID", $timeLast)->first();
 
         //sessiontime = (past session time + diff(last time record, now)(max 15)
-        $timeString = data["time"];
+        $timeString = $data["time"];
         $time = new \DateTime($timeString);
-        $timeRecord = TimeRecordController::createNewTimeRecord($server, $time);
+        $timeRecord = TimeRecordController::createNewTimeRecord($server, $time, $timeBetweenLimit, $gracePeriodSeconds);
         $timeID = $timeRecord["timeID"];
         TimeRecordController::timeBetweenLast($server, $timeRecord, $lastTimeRecord);
         foreach($players as $player) {

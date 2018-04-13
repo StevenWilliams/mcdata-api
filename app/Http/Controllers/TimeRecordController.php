@@ -43,17 +43,19 @@ class TimeRecordController extends Controller
         }
         return $lastTimeID;
     }
-    public static function createNewTimeRecordCurrentTime($server) {
+    public static function createNewTimeRecordCurrentTime($server, $timeBetweenLimit, $gracePeriod) {
         $datetime = new \DateTime();
-        self::createNewTimeRecord($server, $datetime);
+        self::createNewTimeRecord($server, $datetime, $timeBetweenLimit, $gracePeriod);
     }
     //create time record for current time
-    public static function createNewTimeRecord($server, $datetime) {
+    public static function createNewTimeRecord($server, $datetime, $timeBetweenLimit, $gracePeriod) {
         $lastTime = self::getLastTimeID($server);
         $timerecord = new TimeRecord();
         $timerecord->dateTime = $datetime; // new \DateTime();
         $timerecord->server = $server;
         $timerecord->timeID = $lastTime + 1;
+        $timerecord->gracePeriod = $gracePeriod;
+        $timerecord->timeBetweenLimit = $timeBetweenLimit;
         $timerecord->save();
         $time2 = TimeRecord::where("timeID", "=", $lastTime)->where("server", "=", $server)->first();
 
