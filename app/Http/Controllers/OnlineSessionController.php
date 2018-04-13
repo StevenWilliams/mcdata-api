@@ -85,7 +85,7 @@ class OnlineSessionController extends Controller
         //
     }
     public function userOnline($timeID, $username) {
-        $session = OnlineSession::where("timeID", '=', $timeID)->where("username", '=', $uuid)->get();
+        $session = OnlineSession::where("timeID", '=', $timeID)->where("username", '=', $username)->get();
         if($session == null) {
             return false;
         } else {
@@ -93,7 +93,7 @@ class OnlineSessionController extends Controller
         }
     }
     public function getCurrentTimeID() {
-            return 1;
+        return 1;
     }
 
     public function mergeSessions($record){
@@ -103,7 +103,7 @@ class OnlineSessionController extends Controller
         $sessionLength = $record->sessionLength;
         if($this->userOnline($pastTimeID, $username)) {
             echo "useronlineinPastTimeID";
-            $pastSession = OnlineSession::where("username", "=", $username)->where("timeID", "=", $pastTimeID);
+            $pastSession = OnlineSession::where("username", "=", $username)->where("timeID", "=", $pastTimeID)->first();
             $pastSessionLength = $pastSession->sessionLength;
             echo "pastSessionLength", $pastSessionLength, " ", "sessionlength", " ", $sessionLength;
             $record->sessionLength = $pastSessionLength + $sessionLength;
@@ -140,18 +140,18 @@ class OnlineSessionController extends Controller
                 $pastTime = $pastSession["time"];
             }
 
-            $thisSessionTime = $timeBetweenLast::format("%i"); //make sure the difference between the pastTimeID is more than 15 min,
+            $thisSessionTime = $timeBetweenLast->format("%i"); //make sure the difference between the pastTimeID is more than 15 min,
             // to avoid it going in a loop adding more time than there was. Also if there's more submissions than there's supposed to be. 15 min will be the max. On server startup it will keep track of the time.
             //submit at x:00, x:15, x:30, x:45 - to make it even.
             $record = new OnlineSession;
             $record->username = $player["username"];
             //$record->uuid = $player["uuid"];
-            $record->recordID = 0; //auto increment
+            //$record->recordID = 0; //auto increment
             //$record->recordTime = time();
             $record->sessionLength = $thisSessionTime;
             $record->timeID = $timeID;
             $record->save();
-
+            $this->mergeSessions($record);
         }
         echo "test";
 
