@@ -95,6 +95,21 @@ class OnlineSessionController extends Controller
     public function getCurrentTimeID() {
             return 1;
     }
+
+    public function mergeSessions($record){
+        $timeID = $record->timeID;
+        $username = $record->username;
+        $pastTimeID = $timeID - 1;
+        $sessionLength = $record->sessionLength;
+        if($this->userOnline($pastTimeID, $username)) {
+            echo "useronlineinPastTimeID";
+            $pastSession = OnlineSession::where("username", "=", $username)->where("timeID", "=", $pastTimeID);
+            $pastSessionLength = $pastSession->sessionLength;
+            $record->sessionLength = $pastSessionLength + $sessionLength;
+            $record->save();
+            $pastSession->delete();
+        }
+    }
     public function uploadMassSessions(Request $request) {
         $data = $request->json()->all();
         //$players = $request->input("players");
@@ -114,7 +129,7 @@ class OnlineSessionController extends Controller
         $time = new \DateTime($timeString);
         $timeRecord = TimeRecordController::createNewTimeRecord($server, $time, $timeBetweenLimit, $gracePeriodSeconds);
         $timeID = $timeRecord["timeID"];
-        TimeRecordController::timeBetweenLast($server, $timeRecord, $lastTimeRecord);
+        $timeBetweenLast = TimeRecordController::timeBetweenLast($server, $timeRecord, $lastTimeRecord);
         foreach($players as $player) {
             echo $player["username"];
 
@@ -124,7 +139,7 @@ class OnlineSessionController extends Controller
                 $pastTime = $pastSession["time"];
             }
 
-            $thisSessionTime = 15; //make sure the difference between the pastTimeID is more than 15 min,
+            $thisSessionTime = $timeBetweenLast; //make sure the difference between the pastTimeID is more than 15 min,
             // to avoid it going in a loop adding more time than there was. Also if there's more submissions than there's supposed to be. 15 min will be the max. On server startup it will keep track of the time.
             //submit at x:00, x:15, x:30, x:45 - to make it even.
             $record = new OnlineSession;
