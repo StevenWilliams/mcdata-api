@@ -108,8 +108,9 @@ class OnlineSessionController extends Controller
         $lastTimeRecord = TimeRecord::where("server", "=", $server)->where("timeID", $timeLast)->first();
 
         //sessiontime = (past session time + diff(last time record, now)(max 15)
-
-        $timeRecord = TimeRecordController::createNewTimeRecord($server);
+        $timeString = data["time"];
+        $time = new \DateTime($timeString);
+        $timeRecord = TimeRecordController::createNewTimeRecord($server, $time);
         $timeID = $timeRecord["timeID"];
         TimeRecordController::timeBetweenLast($server, $timeRecord, $lastTimeRecord);
         foreach($players as $player) {

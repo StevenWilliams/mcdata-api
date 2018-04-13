@@ -7,14 +7,14 @@ require 'recipe/laravel.php';
 set('application', 'mcdata-api');
 
 // Project repository
-set('repository', 'git@github.com:StevenWilliams/project.git');
+set('repository', 'git@github.com:StevenWilliams/mcdata-api.git');
 
 // [Optional] Allocate tty for git clone. Default value is false.
 set('git_tty', true); 
 
 // Shared files/dirs between deploys 
-add('shared_files', []);
-add('shared_dirs', []);
+add('shared_files', ['.env',]);
+add('shared_dirs', ['storage',]);
 
 // Writable dirs by web server 
 add('writable_dirs', []);
@@ -22,8 +22,9 @@ add('writable_dirs', []);
 
 // Hosts
 
-host('project.com')
-    ->set('deploy_path', '~/{{application}}');    
+host('54.39.58.28')
+    ->user('ubuntu')
+    ->set('deploy_path', '/var/www/html/laravel/{{application}}');
     
 // Tasks
 
