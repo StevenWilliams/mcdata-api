@@ -15,3 +15,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::post('/uploadCurrentPlayers', 'OnlineSessionController@uploadMassSessions');
+Route::post('/createTimeRecord', 'TimeRecordController@store');
