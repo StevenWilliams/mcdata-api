@@ -103,7 +103,7 @@ class OnlineSessionController extends Controller
         $players = $data["players"];
         $server = $data["server"];
         $timeBetweenLimit = $data["timeBetweenLimit"];
-        $gracePeriodSeconds = $data["gradePeriod"];
+        $gracePeriodSeconds = $data["gracePeriod"];
         $requestInterval = 15;
         //var_dump($players);
         $timeLast = TimeRecordController::getLastTimeID($server);
